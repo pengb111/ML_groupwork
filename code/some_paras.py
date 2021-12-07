@@ -1,8 +1,37 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@kongkongYuki 
+pengb111
+/
+ML_groupwork
+Public
+1
+00
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+ML_groupwork/some_paras.py /
+@Aga19x3
+Aga19x3 Update some_paras.py
+Latest commit 407be14 1 hour ago
+ History
+ 1 contributor
+146 lines (112 sloc)  4.22 KB
+   
 ### with some of paras
 
 import numpy as np
 import pandas as pd
-from nltk import SklearnClassifier
 from sklearn.dummy import DummyClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, roc_curve
@@ -10,7 +39,6 @@ from sklearn.metrics import auc
 import matplotlib.pyplot as plt
 from sklearn.model_selection import KFold, cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import GridSearchCV
@@ -44,7 +72,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 # ################### Ridge
 
 # ridge = Ridge()
-# alpha_can = np.logspace(-3, 2, 10)  #这是验证的参数列表
+# alpha_can = np.logspace(-3, 2, 10) 
 # rig = GridSearchCV(ridge, param_grid={'alpha': alpha_can}, cv=5)
 # rig.fit(X_train, y_train)
 # print ('best_alpha：', rig.best_params_)
@@ -55,22 +83,20 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 # parameters = {'n_neighbors': range(1,100)}
 # knn = KNeighborsClassifier()
 # clf = GridSearchCV(knn, parameters, cv=5)
-# clf.fit(X_train, y_train)
+# clf.fit(X, y)
 # print("best_accuracy：%f" % clf.best_score_, "n_neighbors：", clf.best_params_)
 
 
 
 ##################### Random forest
 
-# # 调参，绘制学习曲线来调参n_estimators（对随机森林影响最大）
 # score_lt = []
-
-# 每隔10步建立一个随机森林，获得不同n_estimators的得分
-# for i in range(0,200,10):
+#
+# # for i in range(0,200,10):
 # for i in range(80,100):
 #     rfc = RandomForestClassifier(n_estimators=i+1
 #                                 ,random_state=90)
-#     score = cross_val_score(rfc, X_train, y_train, cv=10).mean()
+#     score = cross_val_score(rfc, X, y, cv=10).mean()
 #     score_lt.append(score)
 # score_max = max(score_lt)
 # # print('Max_score：{}'.format(score_max),
@@ -84,22 +110,18 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 # plt.plot(x, score_lt, 'r-')
 # plt.show()
 
-# 打印1-200，最大得分：0.8169283837056505 子树数量为：91
-# 打印80-99，最大得分：0.8170594439449477 子树数量为：83 提高0.001
 # n_estimators: 83
 
 
 
-# 用网格搜索调整max_depth
 # param_grid = {'max_depth':np.arange(1,20)}
 # GS = GridSearchCV(rfc, param_grid, cv=10)
-# GS.fit(X_train, y_train)
+# GS.fit(X, y)
 #
 # best_param = GS.best_params_
 # best_score = GS.best_score_
 # print(best_param, best_score)
 
-# {'max_depth': 14} 0.8450520437098001 还低了0.001 ？？ 离谱啊
 
 
 
@@ -114,16 +136,15 @@ ydummy = dummy.predict(X_test)
 
 
 model_R = Ridge(alpha=27.825594022071257).fit(X_train, y_train)
-model_K = KNeighborsClassifier(n_neighbors=69, weights='uniform').fit(X_train,y_train)
-model_F = RandomForestClassifier(n_estimators=92, random_state=90).fit(X_train, y_train)
-model_S = SVC(kernel='linear', C=0.01, probability=True).fit(X_train, y_train)
+model_K = KNeighborsClassifier(n_neighbors=44, weights='uniform').fit(X_train,y_train)
+model_F = RandomForestClassifier(n_estimators=83, random_state=90).fit(X_train, y_train)
 
 # ################## ROC
 fpr_F, tpr_F, _ = roc_curve(y_test, model_F.predict_proba(X_test)[:, 1])
 # fpr_R, tpr_R, _ = roc_curve(y_test, model_R.predict_proba(X_test)[:, 1])
 fpr_K, tpr_K, _ = roc_curve(y_test, model_K.predict_proba(X_test)[:, 1])
-fpr_S, tpr_S, _ = roc_curve(y_test, model_S.predict_proba(X_test)[:, 1])
 fpr_B, tpr_B, _ = roc_curve(y_test, dummy.predict_proba(X_test)[:, 1])
+
 
 # ################### AUC
 roc_auc_K = auc(fpr_K, tpr_K)
@@ -132,14 +153,11 @@ roc_auc_B = auc(fpr_B,tpr_B)
 print("ROC_baseline:",roc_auc_B)
 roc_auc_F = auc(fpr_F,tpr_F)
 print("ROC_Randomforest:",roc_auc_F)
-roc_auc_S = auc(fpr_F,tpr_F)
-print("ROC_SVM:",roc_auc_S)
 
 plt.title('Receiver Operating Characteristic')
-plt.plot(fpr_K, tpr_K, 'm', label ='KNN AUC = %0.2f' % roc_auc_K)
+plt.plot(fpr_K, tpr_K, 'b', label ='KNN AUC = %0.2f' % roc_auc_K)
+plt.plot(fpr_B, tpr_B, 'r', label ='Baseline AUC = %0.2f' % roc_auc_B)
 plt.plot(fpr_F, tpr_F, 'y', label ='Random Forest AUC = %0.2f' % roc_auc_F)
-plt.plot(fpr_S, tpr_S, 'b', label ='SVM AUC = %0.2f' % roc_auc_S)
-plt.plot(fpr_B, tpr_B, 'r', label ='Baseline' % roc_auc_B)
 
 plt.legend(loc = 'lower right')
 plt.plot([0, 1], [0, 1],'r--')
@@ -155,5 +173,17 @@ plt.show()
 print("Score_Ridge:", model_R.score(X_test, y_test))
 print("Score_KNN:",model_K.score(X_test,y_test))
 print("Score_RandomForest:",model_F.score(X_test,y_test))
-print("Score_SVM:",model_S.score(X_test,y_test))
 print("Score_baseline:",dummy.score(X_test,y_test))
+© 2021 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+Loading complete

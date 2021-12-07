@@ -49,7 +49,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 # ################### Ridge
 
 # ridge = Ridge()
-# alpha_can = np.logspace(-3, 2, 10)  #这是验证的参数列表
+# alpha_can = np.logspace(-3, 2, 10) 
 # rig = GridSearchCV(ridge, param_grid={'alpha': alpha_can}, cv=5)
 # rig.fit(X_train, y_train)
 # print ('best_alpha：', rig.best_params_)
@@ -67,10 +67,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 
 ##################### Random forest
 
-# 调参，绘制学习曲线来调参n_estimators（对随机森林影响最大）
 # score_lt = []
 #
-# 每隔10步建立一个随机森林，获得不同n_estimators的得分
 # for i in range(0,200,10):
 # for i in range(50,70):
 #     rfc = RandomForestClassifier(n_estimators=i+1
@@ -89,13 +87,10 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 # plt.plot(x, score_lt, 'r-')
 # plt.show()
 
-# 打印1-200，最大得分：0.845839788367107 子树数量为：61
-# 打印50-69，最大得分：0.846234871014593 子树数量为：64 提高0.001
 # n_estimators: 64
 
 
 
-# 用网格搜索调整max_depth
 # param_grid = {'max_depth':np.arange(1,20)}
 # GS = GridSearchCV(rfc, param_grid, cv=10)
 # GS.fit(X, y)
@@ -104,7 +99,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 # best_score = GS.best_score_
 # print(best_param, best_score)
 
-# {'max_depth': 14} 0.8450520437098001 还低了0.001 ？？ 离谱啊
+# {'max_depth': 14} 0.8450520437098001
 
 
 
