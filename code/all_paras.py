@@ -1,4 +1,4 @@
-### with some of paras
+### with all paras
 
 import numpy as np
 import pandas as pd
@@ -11,23 +11,30 @@ from sklearn.model_selection import KFold, cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import Ridge
+from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
 
 df = pd.read_csv("datanew.csv", header=0)
 # print(df)
+X1 = df.iloc[:, 1]
+X2 = df.iloc[:, 2]
 X3 = df.iloc[:, 3]
 X4 = df.iloc[:, 4]
 X5 = df.iloc[:, 5]
 X6 = df.iloc[:, 6]
-X9 = df.iloc[:, 9] # hg
+X7 = df.iloc[:, 7]
+X8 = df.iloc[:, 8]
+X9 = df.iloc[:, 9]
 X10 = df.iloc[:, 10]
 X11 = df.iloc[:, 11]
 X12 = df.iloc[:, 12]
-X13 = df.iloc[:, 13] # soil
+X13 = df.iloc[:, 13]
 X14 = df.iloc[:, 14]
 X15 = df.iloc[:, 15]
-X18 = df.iloc[:, 18] # smd_pd
-X = np.column_stack((X3,X4,X5,X6,X9,X10,X11,X12,X13,X14,X15,X18))
+X16 = df.iloc[:, 16]
+X17 = df.iloc[:, 17]
+X18 = df.iloc[:, 18]
+X = np.column_stack((X1, X2,X3,X4,X5,X6,X7,X8,X9,X10,X11,X12,X13,X14,X15,X16,X17,X18))
 # print(X)
 # bad try:
 # r = range(1,19)
@@ -60,12 +67,12 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 
 ##################### Random forest
 
-# # 调参，绘制学习曲线来调参n_estimators（对随机森林影响最大）
+# 调参，绘制学习曲线来调参n_estimators（对随机森林影响最大）
 # score_lt = []
 #
-# # 每隔10步建立一个随机森林，获得不同n_estimators的得分
-# # for i in range(0,200,10):
-# for i in range(80,100):
+# 每隔10步建立一个随机森林，获得不同n_estimators的得分
+# for i in range(0,200,10):
+# for i in range(50,70):
 #     rfc = RandomForestClassifier(n_estimators=i+1
 #                                 ,random_state=90)
 #     score = cross_val_score(rfc, X, y, cv=10).mean()
@@ -74,17 +81,17 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 # # print('Max_score：{}'.format(score_max),
 # #       'n_estimators：{}'.format(score_lt.index(score_max)*10+1))
 # print('MaxScore：{}'.format(score_max),
-#       'N_estimators：{}'.format(score_lt.index(score_max)+80))
+#       'N_estimators：{}'.format(score_lt.index(score_max)+50))
 #
 # # x = np.arange(1,201,10)
-# x = np.arange(80,100)
+# x = np.arange(50,70)
 # plt.subplot(111)
 # plt.plot(x, score_lt, 'r-')
 # plt.show()
 
-# 打印1-200，最大得分：0.8169283837056505 子树数量为：91
-# 打印80-99，最大得分：0.8170594439449477 子树数量为：83 提高0.001
-# n_estimators: 83
+# 打印1-200，最大得分：0.845839788367107 子树数量为：61
+# 打印50-69，最大得分：0.846234871014593 子树数量为：64 提高0.001
+# n_estimators: 64
 
 
 
@@ -111,9 +118,13 @@ ydummy = dummy.predict(X_test)
 ################### Models
 
 
+# model_R = Ridge(alpha=0.1668100537200059).fit(X_train, y_train)
+# model_K = KNeighborsClassifier(n_neighbors=21, weights='uniform').fit(X_train,y_train)
+# model_F = RandomForestClassifier(n_estimators=64, random_state=90).fit(X_train, y_train)
 model_R = Ridge(alpha=27.825594022071257).fit(X_train, y_train)
-model_K = KNeighborsClassifier(n_neighbors=44, weights='uniform').fit(X_train,y_train)
-model_F = RandomForestClassifier(n_estimators=83, random_state=90).fit(X_train, y_train)
+model_K = KNeighborsClassifier(n_neighbors=69, weights='uniform').fit(X_train,y_train)
+model_F = RandomForestClassifier(n_estimators=92, random_state=90).fit(X_train, y_train)
+model_S = SVC(kernel='linear', C=0.01, probability=True).fit(X_train, y_train)
 
 # ################## ROC
 fpr_F, tpr_F, _ = roc_curve(y_test, model_F.predict_proba(X_test)[:, 1])
